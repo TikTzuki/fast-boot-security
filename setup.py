@@ -7,11 +7,11 @@ setup(
     name='fast-boot-security',
     version='0.0.1',
     license='MIT',
-    author="Tiktzuki",
+    author="TikTzuki",
     author_email='tranphanthanhlong18@gmail.com',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    url='https://github.com/gmyrianthous/example-publish-pypi',
+    url='https://github.com/TikTzuki/fast-boot-security',
     keywords='fast boot',
     install_requires=requirements
 )
