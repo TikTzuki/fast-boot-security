@@ -1,8 +1,5 @@
 from setuptools import setup, find_packages
 
-with open("./requirements.txt", "r") as f:
-    requirements = [line[:-1] for line in f.readlines()]
-
 setup(
     name='fast-boot-security',
     version='0.0.2',
