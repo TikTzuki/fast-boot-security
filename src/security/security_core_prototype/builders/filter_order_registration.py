@@ -1,12 +1,12 @@
 from typing import Dict, Type
 
-from app.third_party.core.security.access.intercept.filter_security_interceptor import (
+from src.security.access.intercept.filter_security_interceptor import (
     FilterSecurityInterceptor
 )
-from app.third_party.core.security.access.intercept.integration_filter import (
+from src.security.access.intercept.integration_filter import (
     IntegrationFilter
 )
-from app.third_party.core.security.authentication import (
+from src.security.authentication import (
     UsernamePasswordAuthenticationFilter
 )
 

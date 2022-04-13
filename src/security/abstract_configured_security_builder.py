@@ -1,7 +1,7 @@
 import abc
 from typing import Type, TypeVar
 
-from app.third_party.core.schemas import Filter
+from src.schemas import Filter
 
 C = TypeVar("C")
 

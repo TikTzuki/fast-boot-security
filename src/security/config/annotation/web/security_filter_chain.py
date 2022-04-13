@@ -2,8 +2,8 @@ from typing import List
 
 from starlette.requests import Request
 
-from app.third_party.core.matcher.request_matcher import RequestMatcher
-from app.third_party.core.schemas import Filter
+from src.matcher.request_matcher import RequestMatcher
+from src.schemas import Filter
 
 
 class SecurityFilterChain:

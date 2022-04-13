@@ -2,17 +2,17 @@ from typing import Any, Dict, Type
 
 from fastapi import FastAPI
 
-from app.third_party.core.context.application import ApplicationContext, T
-from app.third_party.core.security.access.hierarchical_roles import (
+from src.context.application import ApplicationContext, T
+from src.security.access.hierarchical_roles import (
     RoleHierarchy
 )
-from app.third_party.core.security.access.permission_evaluator import (
+from src.security.access.permission_evaluator import (
     PermissionEvaluator
 )
-from app.third_party.core.security.authentication import (
+from src.security.authentication import (
     AuthenticationTrustResolver
 )
-from app.third_party.core.security.core import GrantedAuthorityDefaults
+from src.security.core import GrantedAuthorityDefaults
 
 
 class FastApplication(FastAPI, ApplicationContext):

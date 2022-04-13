@@ -3,12 +3,12 @@ from typing import Dict, List
 
 from starlette.requests import Request
 
-from app.third_party.core.expression.expression_parser import ExpressionParser
-from app.third_party.core.matcher.request_matcher import RequestMatcher
-from app.third_party.core.security.access.expression import (
+from src.expression.expression_parser import ExpressionParser
+from src.matcher.request_matcher import RequestMatcher
+from src.security.access.expression import (
     SecurityExpressionHandler, WebExpressionAttribute
 )
-from app.third_party.core.security.security_core_prototype.config_attribute import (
+from src.security.security_core_prototype.config_attribute import (
     ConfigAttribute
 )
 

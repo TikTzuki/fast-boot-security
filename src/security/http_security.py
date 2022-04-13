@@ -2,16 +2,16 @@ from typing import Any, Dict, List, Type, TypeVar
 
 from starlette.requests import Request
 
-from app.third_party.core.context.application import ApplicationContext
-from app.third_party.core.matcher.request_matcher import (
+from src.context.application import ApplicationContext
+from src.matcher.request_matcher import (
     AnyRequestMatcher, RequestMatcher
 )
-from app.third_party.core.schemas import Filter
-from app.third_party.core.security.authentication import Authenticator
-from app.third_party.core.security.config.annotation.security_configurer_adapter import (
+from src.schemas import Filter
+from src.security.authentication import Authenticator
+from src.security.config.annotation.security_configurer_adapter import (
     SecurityConfigurerAdapter
 )
-from app.third_party.core.security.security_core_prototype.builders.filter_order_registration import (
+from src.security.security_core_prototype.builders.filter_order_registration import (
     FilterOrderRegistration
 )
 

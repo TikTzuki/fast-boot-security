@@ -2,16 +2,16 @@ from typing import Any, Generic, List, Optional, TypeVar
 
 from fastapi.security import HTTPBasicCredentials
 
-from app.third_party.core.expression.expression_parser import (
+from src.expression.expression_parser import (
     Expression, ExpressionParser
 )
-from app.third_party.core.security.access.hierarchical_roles import (
+from src.security.access.hierarchical_roles import (
     RoleHierarchy
 )
-from app.third_party.core.security.access.permission_evaluator import (
+from src.security.access.permission_evaluator import (
     PermissionEvaluator
 )
-from app.third_party.core.security.security_core_prototype.config_attribute import (
+from src.security.security_core_prototype.config_attribute import (
     ConfigAttribute
 )
 

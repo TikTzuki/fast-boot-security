@@ -5,7 +5,7 @@ from fastapi.security import HTTPBasicCredentials
 from starlette.authentication import AuthCredentials, AuthenticationBackend
 from starlette.requests import HTTPConnection
 
-from app.third_party.core.schemas import AbstractUser, Filter
+from src.schemas import AbstractUser, Filter
 
 
 class AuthenticationTrustResolver:

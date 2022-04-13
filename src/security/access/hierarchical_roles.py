@@ -1,6 +1,6 @@
 from typing import List
 
-from app.third_party.core.security.core import GrantedAuthority
+from src.security.core import GrantedAuthority
 
 
 class Role:

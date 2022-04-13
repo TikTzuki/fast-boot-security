@@ -10,15 +10,15 @@ from starlette.requests import HTTPConnection, Request
 from starlette.responses import PlainTextResponse, Response
 from starlette.types import ASGIApp, Receive, Scope, Send
 
-from app.third_party.core import error_code
-from app.third_party.core.application import FastApplication
-from app.third_party.core.context.application import ApplicationContext
-from app.third_party.core.exception import LOSException
-from app.third_party.core.schemas import AbstractUser
-from app.third_party.core.security.access.intercept.integration_filter import (
+from src import error_code
+from src.application import FastApplication
+from src.context.application import ApplicationContext
+from src.exception import LOSException
+from src.schemas import AbstractUser
+from src.security.access.intercept.integration_filter import (
     IntegrationFilter
 )
-from app.third_party.core.security.http_security import HttpSecurity
+from src.security.http_security import HttpSecurity
 
 
 async def add_process_time_header(response, start_time):

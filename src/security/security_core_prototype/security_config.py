@@ -1,6 +1,6 @@
 from typing import List
 
-from app.third_party.core.security.security_core_prototype.config_attribute import (
+from src.security.security_core_prototype.config_attribute import (
     ConfigAttribute
 )
 

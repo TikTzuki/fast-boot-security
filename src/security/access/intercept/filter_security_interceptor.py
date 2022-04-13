@@ -4,17 +4,17 @@ from loguru import logger
 from starlette import status
 from starlette.requests import Request
 
-from app.third_party.core import error_code
-from app.third_party.core.exception import LOSException
-from app.third_party.core.matcher.request_matcher import (
+from src import error_code
+from src.exception import LOSException
+from src.matcher.request_matcher import (
     AnyRequestMatcher, RegexRequestMatcher
 )
-from app.third_party.core.schemas import Filter
-from app.third_party.core.security.access.security_metadata_source import (
+from src.schemas import Filter
+from src.security.access.security_metadata_source import (
     SecurityMetadataSource
 )
-from app.third_party.core.security.access.vote import AccessDecisionManager
-from app.third_party.core.security.authentication import Authenticator
+from src.security.access.vote import AccessDecisionManager
+from src.security.authentication import Authenticator
 
 
 class FilterSecurityInterceptor(Filter):

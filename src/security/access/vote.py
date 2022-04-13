@@ -3,9 +3,9 @@ from typing import Any, List
 from fastapi.security import HTTPBasicCredentials
 from starlette import status
 
-from app.third_party.core import error_code
-from app.third_party.core.exception import LOSException
-from app.third_party.core.security.security_core_prototype.config_attribute import (
+from src import error_code
+from src.exception import LOSException
+from src.security.security_core_prototype.config_attribute import (
     ConfigAttribute
 )
 

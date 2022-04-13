@@ -4,9 +4,9 @@ from typing import Any, Dict, List, Optional, Union
 from pydantic.error_wrappers import ErrorList, ErrorWrapper, flatten_errors
 from pydantic.errors import PydanticErrorMixin
 
-from app.third_party.core import error_code
-from app.third_party.core.exception import LOSError
-from app.third_party.core.schemas import CustomBaseModel
+from src import error_code
+from src.exception import LOSError
+from src.schemas import CustomBaseModel
 
 
 class Base(ABC):

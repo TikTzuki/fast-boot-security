@@ -12,7 +12,7 @@ from pydantic.json import timedelta_isoformat
 from pydantic.schema import datetime, timedelta
 from starlette.authentication import BaseUser
 
-from app.third_party.core.security.access.hierarchical_roles import (
+from src.security.access.hierarchical_roles import (
     RoleHierarchy
 )
 

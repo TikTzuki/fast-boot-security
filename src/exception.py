@@ -4,8 +4,8 @@ from fastapi import HTTPException, status
 from pydantic.error_wrappers import ErrorList, ErrorWrapper, flatten_errors
 from pydantic.errors import PydanticErrorMixin, PydanticValueError
 
-from app.third_party.core import error_code
-from app.third_party.core.schemas import CustomBaseModel
+from src import error_code
+from src.schemas import CustomBaseModel
 
 # DETAIL = "detail"
 MSG = "msg"

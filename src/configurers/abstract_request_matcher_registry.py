@@ -1,8 +1,8 @@
 import abc
 from typing import Generic, List, Optional, TypeVar
 
-from app.third_party.core.context.application import ApplicationContext
-from app.third_party.core.matcher.request_matcher import (
+from src.context.application import ApplicationContext
+from src.matcher.request_matcher import (
     AntPathRequestMatcher, AnyRequestMatcher, RegexRequestMatcher,
     RequestMatcher
 )

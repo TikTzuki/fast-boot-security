@@ -1,8 +1,7 @@
-# import itertools
 import re
 from typing import Any, Type
 
-from app.third_party.core.security.access.hierarchical_roles import (
+from src.security.access.hierarchical_roles import (
     RoleHierarchy
 )
 
@@ -28,15 +27,13 @@ class ExpressionParser:
     has_authority = "hasAuthority"
     has_any_authority = "hasAnyAuthority"
 
-
     def parse_expression(self, expression_string: str) -> re.Pattern[str]:
         if not expression_string:
             raise Exception("expression string is required")
-
         if expression_string.startswith(self.anonymous):
             return "."
         elif expression_string.startswith(self.has_role):
-            return re.compile(expression_string.replace(self.has_role + "(", "")[:-1])
+            return expression_string.replace(self.has_role + "(", "")[:-1]
         elif expression_string.startswith(self.has_any_role):
             return expression_string.replace(self.has_any_role + "(", "").replace(",", "|")[:-1]
         elif expression_string.startswith(self.has_authority):

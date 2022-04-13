@@ -1,46 +1,46 @@
 from typing import Any, Dict, Generic, List, TypeVar
 
-from app.third_party.core.configurers.abstract_request_matcher_registry import (
+from src.configurers.abstract_request_matcher_registry import (
     AbstractRequestMatcherRegistry
 )
-from app.third_party.core.context.application import ApplicationContext
-from app.third_party.core.matcher.request_matcher import RequestMatcher
-from app.third_party.core.security.abstract_configured_security_builder import (
+from src.context.application import ApplicationContext
+from src.matcher.request_matcher import RequestMatcher
+from src.security.abstract_configured_security_builder import (
     AbstractConfiguredSecurityBuilder
 )
-from app.third_party.core.security.access.expression import (
+from src.security.access.expression import (
     SecurityExpressionHandler, WebExpressionVoter
 )
-from app.third_party.core.security.access.hierarchical_roles import (
+from src.security.access.hierarchical_roles import (
     RoleHierarchy
 )
-from app.third_party.core.security.access.intercept.filter_security_interceptor import (
+from src.security.access.intercept.filter_security_interceptor import (
     FilterSecurityInterceptor
 )
-from app.third_party.core.security.access.permission_evaluator import (
+from src.security.access.permission_evaluator import (
     PermissionEvaluator
 )
-from app.third_party.core.security.access.security_metadata_source import (
+from src.security.access.security_metadata_source import (
     SecurityMetadataSource
 )
-from app.third_party.core.security.access.vote import AccessDecisionManager
-from app.third_party.core.security.authentication import (
+from src.security.access.vote import AccessDecisionManager
+from src.security.authentication import (
     AuthenticationTrustResolver, Authenticator
 )
-from app.third_party.core.security.config.annotation.security_builder import (
+from src.security.config.annotation.security_builder import (
     Obj
 )
-from app.third_party.core.security.config.annotation.security_configurer_adapter import (
+from src.security.config.annotation.security_configurer_adapter import (
     SecurityConfigurerAdapter
 )
-from app.third_party.core.security.core import GrantedAuthorityDefaults
-from app.third_party.core.security.security_core_prototype.config_attribute import (
+from src.security.core import GrantedAuthorityDefaults
+from src.security.security_core_prototype.config_attribute import (
     ConfigAttribute
 )
-from app.third_party.core.security.security_core_prototype.filter_invocation import (
+from src.security.security_core_prototype.filter_invocation import (
     FilterInvocation
 )
-from app.third_party.core.security.security_core_prototype.security_config import (
+from src.security.security_core_prototype.security_config import (
     SecurityConfig
 )
 

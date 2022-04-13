@@ -1,8 +1,8 @@
 import abc
 from typing import Any, Generic, List, TypeVar
 
-from app.third_party.core.context.application import ApplicationContext
-from app.third_party.core.security.config.annotation.security_builder import (
+from src.context.application import ApplicationContext
+from src.security.config.annotation.security_builder import (
     SecurityBuilder
 )
 

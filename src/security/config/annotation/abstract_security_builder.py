@@ -2,10 +2,10 @@ import abc
 from enum import Enum, auto
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar
 
-from app.third_party.core.security.config.annotation.security_builder import (
+from src.security.config.annotation.security_builder import (
     SecurityBuilder
 )
-from app.third_party.core.security.config.annotation.security_configurer_adapter import (
+from src.security.config.annotation.security_configurer_adapter import (
     SecurityConfigurerAdapter
 )
 

@@ -1,4 +1,4 @@
-from app.third_party.core.schemas import Filter
+from src.schemas import Filter
 
 
 class IntegrationFilter(Filter):
