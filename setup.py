@@ -13,5 +13,9 @@ setup(
     package_dir={'': 'src'},
     url='https://github.com/TikTzuki/fast-boot-security',
     keywords='fast boot',
-    install_requires=requirements
+    install_requires=[
+        'fastapi>=0.65.2'
+        'loguru>=0.5.3'
+        'orjson>=3.5.4'
+    ]
 )
