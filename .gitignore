@@ -1,0 +1,76 @@
+__pycache__/
+*.py[cod]
+*$py.class
+__init__.py
+
+# Customize
+.idea/
+.DS_Store
+nohup.out
+media/
+.idea
+.vscode
+*.iml
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+eggs/
+.eggs/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+*.manifest
+*.spec
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# mypy
+.mypy_cache/
+
+# visual studio
+.vs/
+bin/
+obj/
+*.pyproj*
+*.sln
+
+log.txt
+
+setup.cfg
+.pre-commit-config.yaml
+
+# ignore document
+/app/third_party/mongo/collection.py
