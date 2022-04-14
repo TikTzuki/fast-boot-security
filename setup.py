@@ -2,11 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='fast-boot-security',
-    version='0.0.5',
+    version='0.0.6',
     license='MIT',
     author="TikTzuki",
     author_email='tranphanthanhlong18@gmail.com',
-    packages=["fast_boot"],
+    packages=find_packages(".", include=["fast_boot*"]),
     package_dir={'': '.'},
     url='https://github.com/TikTzuki/fast-boot-security',
     keywords='fast boot security',
