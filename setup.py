@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='fast-boot-security',
-    version='0.0.3',
+    version='0.0.4',
     license='MIT',
     author="TikTzuki",
     author_email='tranphanthanhlong18@gmail.com',

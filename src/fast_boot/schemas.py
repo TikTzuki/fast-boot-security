@@ -135,16 +135,6 @@ class Pageable(BaseModel):
         return cls(limit, page)
 
 
-# Deprecated
-class ExceptionRes(CustomBaseModel):
-    class Error(BaseModel):
-        loc: List[Union[str, int]] = []
-        code: str = None
-        msg: str = None
-
-    detail: List[Error]
-
-
 class AbstractUser(CustomBaseModel, BaseUser):
     @abc.abstractmethod
     def get_branch_code(self) -> str:
@@ -158,6 +148,31 @@ class AbstractUser(CustomBaseModel, BaseUser):
     @abc.abstractmethod
     def role_hierarchy(self) -> RoleHierarchy:
         ...
+
+
+class UnAuthenticatedUser(AbstractUser):
+
+    def get_branch_code(self) -> str:
+        return None
+
+    def get_branch_parent_code(self) -> str:
+        return None
+
+    @property
+    def role_hierarchy(self) -> RoleHierarchy:
+        return []
+
+    @property
+    def is_authenticated(self) -> bool:
+        return False
+
+    @property
+    def display_name(self) -> str:
+        return None
+
+    @property
+    def identity(self) -> str:
+        return None
 
 
 class Filter(abc.ABC):
