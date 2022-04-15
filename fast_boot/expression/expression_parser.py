@@ -1,3 +1,4 @@
+import itertools
 import re
 from typing import Any, Type
 
@@ -50,7 +51,7 @@ class ExpressionParser:
     def parse(self, role_hierarchy: RoleHierarchy, role_prefix: str) -> str:
         string_builder = ""
         roles = [role.role for role in role_hierarchy.roles]
-        # permission = itertools.chain(role.permissions for role in role_hierarchy.roles)
+        permission = list(itertools.chain(*[role.permissions for role in role_hierarchy.roles]))
         string_builder += "'" + role_prefix + f"','{role_prefix}".join(roles) + "'"
-        # string_builder +=
+        string_builder += ",'" + "','".join(permission) + "'"
         return string_builder
