@@ -14,7 +14,6 @@ from fast_boot.security.config.annotation.security_configurer_adapter import (
 from fast_boot.security.security_core_prototype.builders.filter_order_registration import (
     FilterOrderRegistration
 )
-
 from .abstract_configured_security_builder import (
     AbstractConfiguredSecurityBuilder
 )

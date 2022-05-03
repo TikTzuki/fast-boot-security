@@ -1,9 +1,4 @@
-from typing import List
-
-from django.utils.log import CallbackFilter
 from starlette.middleware.base import RequestResponseEndpoint
-
-from fast_boot.schemas import Filter
 from starlette.requests import Request
 from starlette.responses import Response
 

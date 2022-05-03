@@ -1,11 +1,8 @@
-from typing import Generic, TypeVar, Any, List, Dict, Tuple
+from typing import Generic, TypeVar, List, Dict, Tuple
 
 from fast_boot import logging
-from fast_boot.security.access.security_metadata_source import SecurityMetadataSource
-
-from fast_boot.matcher.request_matcher import RequestMatcher, AnyRequestMatcher, RegexRequestMatcher, AntPathRequestMatcher
-
 from fast_boot.context.application import ApplicationContext
+from fast_boot.matcher.request_matcher import RequestMatcher, AnyRequestMatcher, RegexRequestMatcher, AntPathRequestMatcher
 from fast_boot.security_lite.access_decision_manager import AccessDecisionManager
 from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.filters.filter_security_interceptor import FilterSecurityInterceptor

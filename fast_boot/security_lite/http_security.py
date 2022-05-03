@@ -3,12 +3,9 @@ from typing import Generic, TypeVar, Type, Optional, Dict, List, Any
 from starlette.requests import Request
 from starlette.responses import Response
 
-from fast_boot import logging
-from fast_boot.schemas import Filter
-
-from fast_boot.matcher.request_matcher import AnyRequestMatcher
-
 from fast_boot.context.application import ApplicationContext
+from fast_boot.matcher.request_matcher import AnyRequestMatcher
+from fast_boot.schemas import Filter
 from fast_boot.security_lite.filter_order_registration import FilterOrderRegistration
 from fast_boot.security_lite.security_filter_chain import SecurityFilterChain
 from fast_boot.security_lite.url_authorization_configurer import ExpressionUrlAuthorizationConfigurer

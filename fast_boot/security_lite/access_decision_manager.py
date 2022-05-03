@@ -1,14 +1,11 @@
 import itertools
-import json
 from typing import List
 
 import orjson
 from starlette import status
 
 from fast_boot import error_code
-
 from fast_boot.exception import LOSException
-
 from fast_boot.schemas import AbstractUser
 
 

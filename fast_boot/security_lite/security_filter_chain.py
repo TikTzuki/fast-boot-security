@@ -1,8 +1,8 @@
 from typing import List
 
-from fast_boot.matcher.request_matcher import RequestMatcher
 from starlette.requests import Request
 
+from fast_boot.matcher.request_matcher import RequestMatcher
 from fast_boot.schemas import Filter
 
 

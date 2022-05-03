@@ -1,12 +1,11 @@
 from logging import Filter
-from logging import Filter
 from typing import Dict, List
 
 from starlette.requests import Request
 from starlette.responses import Response
 
 from fast_boot import logging
-from fast_boot.matcher.request_matcher import RequestMatcher, RegexRequestMatcher
+from fast_boot.matcher.request_matcher import RequestMatcher
 from fast_boot.security_lite.access_decision_manager import AccessDecisionManager
 from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.filter_chain import FilterChain
