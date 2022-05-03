@@ -24,3 +24,8 @@ class ApplicationContext(abc.ABC):
     @abc.abstractmethod
     def set_bean(self, bean: Any) -> None:
         ...
+
+    @property
+    @abc.abstractmethod
+    def debug(self) -> bool:
+        ...

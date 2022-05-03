@@ -1,8 +1,11 @@
 from typing import Dict, Type, Any
-from src.fast_boot.middleware import HttpSecurityMiddleWare
-from src.fast_boot.schemas import AbstractUser, UnAuthenticatedUser
-from src.fast_boot.security.authentication import Authenticator
-from src.fast_boot.security.http_security import HttpSecurity
+
+import uvicorn
+
+from fast_boot.middleware import HttpSecurityMiddleWare
+from fast_boot.schemas import AbstractUser, UnAuthenticatedUser
+from fast_boot.security.authentication import Authenticator
+from fast_boot.security.http_security import HttpSecurity
 from .main import app
 
 import typing
@@ -48,3 +51,6 @@ class FastHttpSecurityMiddleWare(HttpSecurityMiddleWare):
 
 
 app.add_middleware(HttpSecurityMiddleWare)
+
+if __name__ == "__main__":
+    uvicorn.run('tests.test_middleware:app', host="127.0.0.1", port=8000, reload=True)

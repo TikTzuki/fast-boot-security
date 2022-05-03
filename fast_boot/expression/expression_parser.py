@@ -50,8 +50,8 @@ class ExpressionParser:
 
     def parse(self, role_hierarchy: RoleHierarchy, role_prefix: str) -> str:
         string_builder = ""
-        roles = [role.role for role in role_hierarchy.roles]
-        permission = list(itertools.chain(*[role.permissions for role in role_hierarchy.roles]))
-        string_builder += "'" + role_prefix + f"','{role_prefix}".join(roles) + "'"
-        string_builder += ",'" + "','".join(permission) + "'"
+        role_codes = [role.role_code for role in role_hierarchy.roles]
+        permission_codes = list(itertools.chain(*[[per.permission_code for per in role.permissions] for role in role_hierarchy.roles]))
+        string_builder += "'" + role_prefix + f"','{role_prefix}".join(role_codes) + "'"
+        string_builder += ",'" + "','".join(permission_codes) + "'"
         return string_builder

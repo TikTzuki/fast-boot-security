@@ -11,6 +11,7 @@ from pydantic.generics import GenericModel
 from pydantic.json import timedelta_isoformat
 from pydantic.schema import datetime, timedelta
 from starlette.authentication import BaseUser
+from starlette.responses import Response
 
 from fast_boot.security.access.hierarchical_roles import (
     RoleHierarchy
@@ -160,7 +161,7 @@ class UnAuthenticatedUser(AbstractUser):
 
     @property
     def role_hierarchy(self) -> RoleHierarchy:
-        return []
+        return RoleHierarchy()
 
     @property
     def is_authenticated(self) -> bool:
@@ -174,8 +175,11 @@ class UnAuthenticatedUser(AbstractUser):
     def identity(self) -> str:
         return None
 
+    def __str__(self):
+        return str(self.identity)
+
 
 class Filter(abc.ABC):
     @abc.abstractmethod
-    async def do_filter(self, request, response, filter_chain) -> None:
+    async def do_filter(self, request, response, filter_chain) -> Response:
         ...
