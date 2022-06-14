@@ -137,13 +137,6 @@ class Pageable(BaseModel):
 
 
 class AbstractUser(CustomBaseModel, BaseUser):
-    @abc.abstractmethod
-    def get_branch_code(self) -> str:
-        ...
-
-    @abc.abstractmethod
-    def get_branch_parent_code(self) -> str:
-        ...
 
     @property
     @abc.abstractmethod
@@ -152,12 +145,6 @@ class AbstractUser(CustomBaseModel, BaseUser):
 
 
 class UnAuthenticatedUser(AbstractUser):
-
-    def get_branch_code(self) -> str:
-        return None
-
-    def get_branch_parent_code(self) -> str:
-        return None
 
     @property
     def role_hierarchy(self) -> RoleHierarchy:
@@ -177,6 +164,32 @@ class UnAuthenticatedUser(AbstractUser):
 
     def __str__(self):
         return str(self.identity)
+
+
+class User(AbstractUser):
+    username: str = Field(None)
+    fullname: str = Field(None)
+    _role_hierarchy: RoleHierarchy = Field(RoleHierarchy())
+
+    def __init__(self, username, fullname, role_hierarchy, **data: Any):
+        super().__init__(username=username, fullname=fullname, **data)
+        self._role_hierarchy = role_hierarchy
+
+    @property
+    def role_hierarchy(self) -> RoleHierarchy:
+        return self._role_hierarchy
+
+    @property
+    def is_authenticated(self) -> bool:
+        return True
+
+    @property
+    def display_name(self) -> str:
+        return self.fullname
+
+    @property
+    def identity(self) -> str:
+        return self.username
 
 
 class Filter(abc.ABC):

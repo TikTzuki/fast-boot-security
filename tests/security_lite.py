@@ -1,31 +1,25 @@
-import jwt
-from starlette import status
-
-from fast_boot import error_code
-
-from fast_boot.exception import LOSException
-from fastapi.security import HTTPBearer, HTTPBasic, HTTPBasicCredentials
-from starlette.middleware import Middleware
-
-from fast_boot.application import FastApplication
-
 import http
-import typing
-from typing import Dict, Type, Any, Tuple
 from typing import Optional
+from typing import Tuple
 
+import jwt
 import uvicorn
 from fastapi import Path, Query, Security, HTTPException
+from fastapi.security import HTTPBearer, HTTPBasic
 from fastapi.security.utils import get_authorization_scheme_param
+from starlette import status
 from starlette.authentication import AuthCredentials
 from starlette.requests import HTTPConnection, Request
 
-from fast_boot.schemas import AbstractUser, UnAuthenticatedUser, CustomBaseModel
-from fast_boot.security.access.hierarchical_roles import RoleHierarchy, Role
+from fast_boot import error_code
+from fast_boot.application import FastApplication
+from fast_boot.exception import LOSException
+from fast_boot.schemas import AbstractUser, UnAuthenticatedUser, User
 from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.http_security import HttpSecurity
 from fast_boot.security_lite.http_security_middleware import HttpSecurityMiddleware
 from fast_boot.security_lite.web_security_configurer_adapter import WebSecurityConfigurerAdapter
+from tests.data import users
 
 app = FastApplication(
     docs_url="/",
@@ -44,42 +38,42 @@ class WebConfig(WebSecurityConfigurerAdapter):
             # .any_request().authenticated()
 
 
-class User(AbstractUser):
-    class Branch(CustomBaseModel):
-        branch_code: str = None
-        branch_name: str = None
-        branch_parent_code: str = None
-
-    user_id: str = None
-    user_name: str = None
-    full_Name: str = None
-    branch: Branch
-    group_roles: typing.List[Dict]
-
-    def __init__(self, **data: Any):
-        super().__init__(**data)
-
-    def get_branch_code(self) -> str:
-        return self.branch.branch_code
-
-    def get_branch_parent_code(self) -> str:
-        return self.branch.branch_parent_code
-
-    @property
-    def role_hierarchy(self) -> RoleHierarchy:
-        return RoleHierarchy(roles=self.group_roles)
-
-    @property
-    def is_authenticated(self) -> bool:
-        return True
-
-    @property
-    def display_name(self) -> str:
-        return self.user_name
-
-    @property
-    def identity(self) -> str:
-        return self.user_name
+# class User(AbstractUser):
+#     class Branch(CustomBaseModel):
+#         branch_code: str = None
+#         branch_name: str = None
+#         branch_parent_code: str = None
+#
+#     user_id: str = None
+#     user_name: str = None
+#     full_Name: str = None
+#     branch: Branch
+#     group_roles: typing.List[Dict]
+#
+#     def __init__(self, **data: Any):
+#         super().__init__(**data)
+#
+#     def get_branch_code(self) -> str:
+#         return self.branch.branch_code
+#
+#     def get_branch_parent_code(self) -> str:
+#         return self.branch.branch_parent_code
+#
+#     @property
+#     def role_hierarchy(self) -> RoleHierarchy:
+#         return RoleHierarchy(roles=self.group_roles)
+#
+#     @property
+#     def is_authenticated(self) -> bool:
+#         return True
+#
+#     @property
+#     def display_name(self) -> str:
+#         return self.user_name
+#
+#     @property
+#     def identity(self) -> str:
+#         return self.user_name
 
 
 class AuthenticationManager(Authenticator):
@@ -107,7 +101,6 @@ class AuthenticationManager(Authenticator):
             return AuthCredentials(), user
 
         if scheme == "Basic":
-            from .data import users
             basic_credentials = await HTTPBasic()(conn)
             user_opt = list(filter(lambda u: u["user_info"]["user_name"] == basic_credentials.username, users))
             if not user_opt:
@@ -116,7 +109,8 @@ class AuthenticationManager(Authenticator):
                     detail="Invalid authentication credentials",
                     headers={"WWW-Authenticate": "Basic"},
                 )
-            user = User(**user_opt[0]["user_info"])
+            user = user_opt[0]["user_info"]
+            user = User(username=user["user_name"], fullname=user["full_name"])
             return AuthCredentials(), user
         return unauthenticated
 
