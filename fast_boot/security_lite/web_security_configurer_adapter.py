@@ -7,18 +7,17 @@ from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.filter_chain import FilterChain
 from fast_boot.security_lite.http_security import HttpSecurity
 from fast_boot.security_lite.security_filter_chain import SecurityFilterChain
+from fast_boot.security_lite.shared_objects import SharedObjects
 
 
 class WebSecurityConfigurerAdapter:
-    context: ApplicationContext
-    http: HttpSecurity = None
-
-    def __init__(self, context: ApplicationContext):
-        self.context = context
+    def __init__(self, shared_objects:SharedObjects, http: HttpSecurity):
+        self.shared_objects = shared_objects
+        self.http: HttpSecurity = http
 
     def get_http(self) -> HttpSecurity:
         if not self.http:
-            self.http = HttpSecurity(self.context)
+            self.http = HttpSecurity(self.shared_objects)
             self.apply_default_configuration(self.http)
             self.configure(self.http)
         return self.http

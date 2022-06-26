@@ -12,17 +12,12 @@ from fast_boot.security_lite.filter_chain import FilterChain
 
 
 class FilterSecurityInterceptor(Filter):
-    security_metadata_source: Dict[RequestMatcher, List[str]]
+    security_metadata_source: Dict[RequestMatcher, List[Dict]]
     authentication_manager: Authenticator
     access_decision_manager: AccessDecisionManager
     observe_one_per_request: bool = True
 
     async def do_filter(self, request: Request, response: Response, filter_chain: FilterChain) -> None:
-        if request.app.debug:
-            for matcher, attrs in self.security_metadata_source.items():
-                if matcher.matches(request):
-                    logging.debug(f"chain index: {request.scope.get('filter_chain_index') - 1}, {attrs}")
-
         auth, user = await self.authentication_manager.authenticate(request)
         request.scope["auth"] = auth
         request.scope["user"] = user
@@ -30,6 +25,8 @@ class FilterSecurityInterceptor(Filter):
         for matcher, attrs in self.security_metadata_source.items():
             if not matcher.matches(request):
                 continue
+            if request.app.debug:
+                logging.debug(f"chain index: {request.scope.get('filter_chain_index') - 1}, {attrs}")
             self.access_decision_manager.decide(user, attrs)
 
         response = await filter_chain.do_filter(request, response)

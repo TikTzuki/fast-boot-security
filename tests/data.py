@@ -29,8 +29,8 @@ users = [
             "hrm_position_code": "042",
             "hrm_position_name": "Nhân viên",
             "group_roles": [
-                {"role_code": "NGOCHB3", "permissions": [{"permission_code": "APPROVER"}, {"permission_code": "CONTROLLER"}]},
-                {"role_code": "NVKD", "permissions": [{"permission_code": "APPROVER"}, {"permission_code": "CONTROLLER"}]}
+                {"code": "NGOCHB3", "permissions": [{"code": "APPROVER"}, {"code": "CONTROLLER"}]},
+                {"code": "NVKD", "permissions": [{"code": "APPROVER"}, {"code": "CONTROLLER"}]}
             ]
         },
         "key_redis": "NGOCHB3",

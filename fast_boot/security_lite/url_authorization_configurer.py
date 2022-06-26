@@ -1,11 +1,9 @@
 from typing import Generic, TypeVar, List, Dict, Tuple
 
-from fast_boot import logging
-from fast_boot.context.application import ApplicationContext
 from fast_boot.matcher.request_matcher import RequestMatcher, AnyRequestMatcher, RegexRequestMatcher, AntPathRequestMatcher
 from fast_boot.security_lite.access_decision_manager import AccessDecisionManager
-from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.filters.filter_security_interceptor import FilterSecurityInterceptor
+from fast_boot.security_lite.shared_objects import SharedObjects
 
 B = TypeVar("B")
 Obj = TypeVar("Obj")
@@ -22,9 +20,9 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
     role_prefix: str = ""
     registry: 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry'
 
-    def __init__(self, context: ApplicationContext):
-        self.context = context
-        self.registry = self.ExpressionInterceptUrlRegistry(context, self)
+    def __init__(self, shared_objects: SharedObjects):
+        self.shared_objects = shared_objects
+        self.registry = self.ExpressionInterceptUrlRegistry(self)
 
     def get_registry(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
         return self.registry
@@ -51,7 +49,7 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
 
     @staticmethod
     def has_any_authority(*authorities) -> Dict:
-        return {"hashAnyAuthority": list(authorities)}
+        return {"hasAnyAuthority": list(authorities)}
         # any_authorities = "','".join(authorities)
         # return "hasAnyAuthority('" + any_authorities + "')"
 
@@ -70,7 +68,7 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
     def create_filter_security_interceptor(self, http: B, metadata_source) -> FilterSecurityInterceptor:
         interceptor = FilterSecurityInterceptor()
         interceptor.security_metadata_source = metadata_source
-        interceptor.authentication_manager = None
+        interceptor.authentication_manager = self.shared_objects.authenticator
         interceptor.access_decision_manager = AccessDecisionManager()
         return interceptor
 
@@ -123,19 +121,18 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
     class ExpressionInterceptUrlRegistry:
         url_mappings: List[Tuple[RequestMatcher, List[str]]] = []
 
-        def __init__(self, context: ApplicationContext, outer: 'ExpressionUrlAuthorizationConfigurer'):
-            self.context = context
+        def __init__(self, outer: 'ExpressionUrlAuthorizationConfigurer'):
             self.outer = outer
 
         def any_request(self) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':
             return self.request_matchers(AnyRequestMatcher.instance())
 
-        def ant_matchers(self, method=None, *ant_patterns) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':
+        def ant_matchers(self, *ant_patterns, method=None) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':
             if not ant_patterns:
                 ant_patterns = ["/**"]
             return self.chain_request_matchers([AntPathRequestMatcher(pattern, method) for pattern in ant_patterns])
 
-        def regex_matchers(self, method=None, *regex_patterns) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':
+        def regex_matchers(self, *regex_patterns, method=None) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':
             return self.chain_request_matchers([RegexRequestMatcher(pattern, method) for pattern in regex_patterns])
 
         def request_matchers(self, *request_matchers: RequestMatcher) -> 'ExpressionUrlAuthorizationConfigurer.AuthorizeUrl':

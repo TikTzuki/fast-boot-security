@@ -131,30 +131,18 @@ class RoleHierarchy(Schema):
 
 
 class AbstractUser(Schema, BaseUser):
-    @abc.abstractmethod
-    def get_branch_code(self) -> str:
-        ...
 
     @abc.abstractmethod
-    def get_branch_parent_code(self) -> str:
+    def get_role_hierarchy(self) -> RoleHierarchy:
         ...
 
-    @property
-    @abc.abstractmethod
-    def role_hierarchy(self) -> RoleHierarchy:
-        ...
+    def __str__(self):
+        return f"User({self.identity})"
 
 
 class UnAuthenticatedUser(AbstractUser):
 
-    def get_branch_code(self) -> str:
-        return None
-
-    def get_branch_parent_code(self) -> str:
-        return None
-
-    @property
-    def role_hierarchy(self) -> RoleHierarchy:
+    def get_role_hierarchy(self) -> RoleHierarchy:
         return RoleHierarchy()
 
     @property
@@ -168,9 +156,6 @@ class UnAuthenticatedUser(AbstractUser):
     @property
     def identity(self) -> str:
         return None
-
-    def __str__(self):
-        return str(self.identity)
 
 
 class Filter(abc.ABC):

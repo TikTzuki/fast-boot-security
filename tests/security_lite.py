@@ -9,30 +9,18 @@ from fastapi.security import HTTPBearer, HTTPBasic
 from fastapi.security.utils import get_authorization_scheme_param
 from starlette import status
 from starlette.authentication import AuthCredentials
-from starlette.requests import HTTPConnection, Request
+from starlette.requests import Request
 
 from fast_boot.application import FastApplication
 from fast_boot.schemas import AbstractUser, UnAuthenticatedUser, Schema, RoleHierarchy
 from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.http_security import HttpSecurity
 from fast_boot.security_lite.http_security_middleware import HttpSecurityMiddleware
-from fast_boot.security_lite.web_security_configurer_adapter import WebSecurityConfigurerAdapter
 
 app = FastApplication(
     docs_url="/",
     debug=True
 )
-
-
-class WebConfig(WebSecurityConfigurerAdapter):
-    def configure(self, http: HttpSecurity) -> None:
-        http.authorize_requests() \
-            .regex_matchers(None, "/login*").permit_all() \
-            .regex_matchers(None, "/enum-status-code/").has_any_authority("APPROVER", "CONTROLLER") \
-            .regex_matchers(None, "/text*").has_any_authority("INITIALIZER", "CONTROLLER") \
-            .regex_matchers(None, "/text*").has_role("NGOCHB3") \
-            .regex_matchers(None, "/path/*").has_any_authority("APPROVER") \
-            # .any_request().authenticated()
 
 
 class User(AbstractUser):
@@ -56,8 +44,7 @@ class User(AbstractUser):
     def get_branch_parent_code(self) -> str:
         return self.branch.branch_parent_code
 
-    @property
-    def role_hierarchy(self) -> RoleHierarchy:
+    def get_role_hierarchy(self) -> RoleHierarchy:
         return RoleHierarchy(roles=self.group_roles)
 
     @property
@@ -75,9 +62,10 @@ class User(AbstractUser):
 
 class AuthenticationManager(Authenticator):
 
-    async def authenticate(self, conn: HTTPConnection) -> Tuple[AuthCredentials, AbstractUser]:
+    async def authenticate(self, request: Request) -> Tuple[AuthCredentials, AbstractUser]:
+        from .data import users
         unauthenticated = AuthCredentials(), UnAuthenticatedUser()
-        authorization: str = conn.headers.get("Authorization")
+        authorization: str = request.headers.get("Authorization")
         if not authorization:
             return unauthenticated
         scheme, credentials = get_authorization_scheme_param(authorization)
@@ -86,6 +74,9 @@ class AuthenticationManager(Authenticator):
         if scheme == "Bearer":
             secret_key = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
             algorithms = "HS256"
+            user_opt = list(filter(lambda u: u["user_info"]["user_name"] == "NGOCHB3", users))
+            user = User(**user_opt[0]["user_info"])
+            return AuthCredentials(), user
             # try:
             #     rs = jwt.decode(credentials, secret_key, algorithms=algorithms)
             # except jwt.ExpiredSignatureError:
@@ -98,8 +89,7 @@ class AuthenticationManager(Authenticator):
             # return AuthCredentials(), user
 
         if scheme == "Basic":
-            from .data import users
-            basic_credentials = await HTTPBasic()(conn)
+            basic_credentials = await HTTPBasic()(request)
             user_opt = list(filter(lambda u: u["user_info"]["user_name"] == basic_credentials.username, users))
             if not user_opt:
                 raise HTTPException(
@@ -112,7 +102,18 @@ class AuthenticationManager(Authenticator):
         return unauthenticated
 
 
-app.add_middleware(HttpSecurityMiddleware, configurer=WebConfig(app), authenticator=AuthenticationManager())
+class HttpMiddleware(HttpSecurityMiddleware):
+
+    def configure(self, http: HttpSecurity) -> None:
+        (http.authorize_requests()
+         .regex_matchers("/login*").permit_all()
+         .regex_matchers("/enum-status-code/").has_any_authority("APPROVER", "CONTROLLER")
+         .regex_matchers("/text*", method="GET").has_any_authority("INITIALIZER")
+         .regex_matchers("/text*").has_role("NGOCHB3")
+         .regex_matchers("/path/*").has_any_authority("APPROVER"))
+
+
+app.add_middleware(HttpMiddleware, authenticator=AuthenticationManager())
 
 
 @app.get(

@@ -3,11 +3,11 @@ from typing import Generic, TypeVar, Type, Optional, Dict, List, Any
 from starlette.requests import Request
 from starlette.responses import Response
 
-from fast_boot.context.application import ApplicationContext
 from fast_boot.matcher.request_matcher import AnyRequestMatcher
 from fast_boot.schemas import Filter
 from fast_boot.security_lite.filter_order_registration import FilterOrderRegistration
 from fast_boot.security_lite.security_filter_chain import SecurityFilterChain
+from fast_boot.security_lite.shared_objects import SharedObjects
 from fast_boot.security_lite.url_authorization_configurer import ExpressionUrlAuthorizationConfigurer
 
 Obj = TypeVar("Obj")
@@ -23,14 +23,14 @@ class HttpSecurity(AbstractSecurityBuilder[SecurityFilterChain, 'HttpSecurity'])
     filters: List['OrderedFilter'] = []
     filter_orders: FilterOrderRegistration
 
-    def __init__(self, context: ApplicationContext):
+    def __init__(self, shared_objects: SharedObjects):
         self.configurers = dict()
         self.request_matcher = AnyRequestMatcher.instance()
         self.filter_orders = FilterOrderRegistration()
-        self.context = context
+        self.shared_objects = shared_objects
 
     def authorize_requests(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
-        return self._get_or_apply(ExpressionUrlAuthorizationConfigurer(self.context)).get_registry()
+        return self._get_or_apply(ExpressionUrlAuthorizationConfigurer(self.shared_objects)).get_registry()
 
     def _get_or_apply(self, configurer: ExpressionUrlAuthorizationConfigurer) -> ExpressionUrlAuthorizationConfigurer:
         existing_config = self.get_configurer(type(configurer))

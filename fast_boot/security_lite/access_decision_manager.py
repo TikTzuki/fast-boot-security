@@ -1,7 +1,6 @@
 import itertools
-from typing import List
+from typing import Dict, List, Iterable
 
-import orjson
 from starlette import status
 
 from fast_boot import error_code
@@ -21,30 +20,23 @@ class AccessDecisionManager:
     has_authority = "hasAuthority"
     has_any_authority = "hasAnyAuthority"
 
-    def decide(self, user: AbstractUser, attributes: List[str]):
+    def decide(self, user: AbstractUser, attributes: List[Dict]):
         for attr in attributes:
-            if attr.startswith(self.has_any_authority):
-                self.compare_authority(user, attr.replace(self.has_any_authority + "(", "[")[:-1] + "]")
-            if attr.startswith(self.has_authority):
-                self.compare_authority(user, attr.replace(self.has_authority + "(", "[")[:-1] + "]")
-            if attr.startswith(self.has_role):
-                self.compare_role(user, attr.replace(self.has_role + "(", "[")[:-1] + "]")
-            if attr.startswith(self.has_any_role):
-                self.compare_role(user, attr.replace(self.has_any_role + "(", "[")[:-1] + "]")
+            key = list(attr.keys())[0]
+            if key in {self.has_any_authority, self.has_authority}:
+                self.compare_authority(user, attr.values())
+            elif key in {self.has_role, self.has_any_role}:
+                self.compare_role(user, attr.values())
 
-    def compare_role(self, user: AbstractUser, attribute: str):
-        attribute = attribute.replace("'", '"')
-        roles = set(orjson.loads(attribute))
-        granted_roles = {role.role_code for role in user.role_hierarchy.roles}
+    def compare_role(self, user: AbstractUser, attribute: Iterable[str]):
+        granted_roles = {role.code for role in user.get_role_hierarchy().roles}
         for granted_role in granted_roles:
-            if granted_role in roles:
+            if granted_role in attribute:
                 return
         raise LOSException.with_error(code=error_code.ACCESS_DENIED, status_code=status.HTTP_403_FORBIDDEN)
 
-    def compare_authority(self, user: AbstractUser, attribute: str):
-        attribute = attribute.replace("'", '"')
-        authorities = set(orjson.loads(attribute))
-        granted_permissions = set(itertools.chain(*[{per.permission_code for per in role.permissions} for role in user.role_hierarchy.roles]))
+    def compare_authority(self, user: AbstractUser, authorities: Iterable[str]):
+        granted_permissions = set(itertools.chain(*[{per.code for per in role.permissions} for role in user.get_role_hierarchy().roles]))
         for granted_permission in granted_permissions:
             if granted_permission in authorities:
                 return
