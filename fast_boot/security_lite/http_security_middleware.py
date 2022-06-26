@@ -11,7 +11,7 @@ from starlette.responses import PlainTextResponse, Response, StreamingResponse
 from starlette.types import ASGIApp, Receive, Scope, Send, Message
 
 from fast_boot import error_code
-from fast_boot.application import FastApplication
+from fast_boot.context.application import ApplicationContext
 from fast_boot.exception import LOSException
 from fast_boot.security_lite.web_security_configurer_adapter import WebSecurityConfigurerAdapter
 
@@ -21,7 +21,7 @@ class HttpSecurityMiddleware:
     def __init__(
             self,
             app: ASGIApp,
-            context: FastApplication,
+            context: ApplicationContext,
             dispatch: DispatchFunction = None,
             on_error: Callable[[HTTPConnection, AuthenticationError], Response] = None
     ) -> None:

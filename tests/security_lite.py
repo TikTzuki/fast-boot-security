@@ -1,27 +1,18 @@
-import jwt
-from starlette import status
-
-from fast_boot import error_code
-
-from fast_boot.exception import LOSException
-from fastapi.security import HTTPBearer, HTTPBasic, HTTPBasicCredentials
-from starlette.middleware import Middleware
-
-from fast_boot.application import FastApplication
-
 import http
 import typing
-from typing import Dict, Type, Any, Tuple
+from typing import Dict, Any, Tuple
 from typing import Optional
 
 import uvicorn
 from fastapi import Path, Query, Security, HTTPException
+from fastapi.security import HTTPBearer, HTTPBasic
 from fastapi.security.utils import get_authorization_scheme_param
+from starlette import status
 from starlette.authentication import AuthCredentials
 from starlette.requests import HTTPConnection, Request
 
-from fast_boot.schemas import AbstractUser, UnAuthenticatedUser, CustomBaseModel
-from fast_boot.security.access.hierarchical_roles import RoleHierarchy, Role
+from fast_boot.application import FastApplication
+from fast_boot.schemas import AbstractUser, UnAuthenticatedUser, Schema, RoleHierarchy
 from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.http_security import HttpSecurity
 from fast_boot.security_lite.http_security_middleware import HttpSecurityMiddleware
@@ -45,7 +36,7 @@ class WebConfig(WebSecurityConfigurerAdapter):
 
 
 class User(AbstractUser):
-    class Branch(CustomBaseModel):
+    class Branch(Schema):
         branch_code: str = None
         branch_name: str = None
         branch_parent_code: str = None
@@ -95,16 +86,16 @@ class AuthenticationManager(Authenticator):
         if scheme == "Bearer":
             secret_key = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
             algorithms = "HS256"
-            try:
-                rs = jwt.decode(credentials, secret_key, algorithms=algorithms)
-            except jwt.ExpiredSignatureError:
-                raise LOSException.with_error(code=error_code.TOKEN_EXPIRED, status_code=status.HTTP_401_UNAUTHORIZED)
-            except jwt.exceptions.InvalidSignatureError:
-                raise LOSException.with_error(code=error_code.ERROR_INVALID_TOKEN, status_code=status.HTTP_401_UNAUTHORIZED)
-            except jwt.DecodeError as e:
-                raise LOSException.with_error(code=error_code.ERROR_INVALID_TOKEN, status_code=status.HTTP_401_UNAUTHORIZED)
-            user = User(**rs.get("user_info"))
-            return AuthCredentials(), user
+            # try:
+            #     rs = jwt.decode(credentials, secret_key, algorithms=algorithms)
+            # except jwt.ExpiredSignatureError:
+            #     raise LOSException.with_error(code=error_code.TOKEN_EXPIRED, status_code=status.HTTP_401_UNAUTHORIZED)
+            # except jwt.exceptions.InvalidSignatureError:
+            #     raise LOSException.with_error(code=error_code.ERROR_INVALID_TOKEN, status_code=status.HTTP_401_UNAUTHORIZED)
+            # except jwt.DecodeError as e:
+            #     raise LOSException.with_error(code=error_code.ERROR_INVALID_TOKEN, status_code=status.HTTP_401_UNAUTHORIZED)
+            # user = User(**rs.get("user_info"))
+            # return AuthCredentials(), user
 
         if scheme == "Basic":
             from .data import users
@@ -121,10 +112,10 @@ class AuthenticationManager(Authenticator):
         return unauthenticated
 
 
-app.update_bean({
-    WebSecurityConfigurerAdapter: WebConfig(app),
-    Authenticator: AuthenticationManager()
-})
+# app.update_bean({
+#     WebSecurityConfigurerAdapter: WebConfig(app),
+#     Authenticator: AuthenticationManager()
+# })
 
 app.add_middleware(HttpSecurityMiddleware, context=app)
 

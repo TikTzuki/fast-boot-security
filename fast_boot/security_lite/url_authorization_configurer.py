@@ -34,22 +34,26 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
             self.registry.add_mapping((request_matcher, config_attributes))
 
     @staticmethod
-    def has_any_role(rolePrefix: str, *authorities) -> str:
-        anyAuthorities = f"','{rolePrefix}".join(authorities)
-        return "hasAnyRole('" + rolePrefix + anyAuthorities + "')"
+    def has_any_role(rolePrefix: str, *authorities) -> Dict:
+        # anyAuthorities = f"','{rolePrefix}".join(authorities)
+        return {"hasAnyRole": list(authorities)}
+        # return "{hasAnyRole('" + rolePrefix + anyAuthorities + "')"
 
     @staticmethod
-    def has_role(rolePrefix: str, role: str) -> str:
-        return "hasRole('" + rolePrefix + role + "')"
+    def has_role(rolePrefix: str, role: str) -> Dict:
+        return {"hasRole": role}
+        # return "hasRole('" + rolePrefix + role + "')"
 
     @staticmethod
-    def has_authority(authority: str) -> str:
-        return "hasAuthority('" + authority + "')"
+    def has_authority(authority: str) -> Dict:
+        return {"hasAuthority": authority}
+        # return "hasAuthority('" + authority + "')"
 
     @staticmethod
-    def has_any_authority(*authorities) -> str:
-        any_authorities = "','".join(authorities)
-        return "hasAnyAuthority('" + any_authorities + "')"
+    def has_any_authority(*authorities) -> Dict:
+        return {"hashAnyAuthority": list(authorities)}
+        # any_authorities = "','".join(authorities)
+        # return "hasAnyAuthority('" + any_authorities + "')"
 
     def and_(self) -> B:
         return self.security_builder
@@ -72,7 +76,7 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
         interceptor.access_decision_manager = self.context.get_bean(AccessDecisionManager)
         return interceptor
 
-    def create_metadata_source(self, http: B) -> Dict[RequestMatcher, list[str]]:
+    def create_metadata_source(self, http: B) -> Dict[RequestMatcher, List[str]]:
         request_map = self.registry.create_request_map()
         return request_map
 
@@ -101,16 +105,16 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
             return self.access(ExpressionUrlAuthorizationConfigurer.has_any_authority(*authorities))
 
         def permit_all(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
-            return self.access("permitAll")
+            return self.access({"permitAll": None})
 
         def anonymous(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
-            return self.access("anonymous")
+            return self.access({"anonymous": None})
 
         def deny_all(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
-            return self.access("denyAll")
+            return self.access({"denyAll": None})
 
-        def authenticated(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry[B]':
-            return self.access("authenticated")
+        def authenticated(self) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
+            return self.access({"authenticated": None})
 
         def access(self, attribute) -> 'ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry':
             if self._not:

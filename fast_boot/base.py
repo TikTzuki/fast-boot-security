@@ -6,11 +6,11 @@ from pydantic.errors import PydanticErrorMixin
 
 from fast_boot import error_code
 from fast_boot.exception import LOSError
-from fast_boot.schemas import CustomBaseModel
+from fast_boot.schemas import Schema
 
 
 class Base(ABC):
-    def __init__(self, model=CustomBaseModel):
+    def __init__(self, model=Schema):
         self.raw_errors: List[ErrorList] = []
         self.model = model
         self._error_cache: Optional[List[Dict[str, Any]]] = None

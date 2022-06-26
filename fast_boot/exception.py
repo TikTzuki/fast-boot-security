@@ -5,7 +5,7 @@ from pydantic.error_wrappers import ErrorList, ErrorWrapper, flatten_errors
 from pydantic.errors import PydanticErrorMixin, PydanticValueError
 
 from fast_boot import error_code
-from fast_boot.schemas import CustomBaseModel
+from fast_boot.schemas import Schema
 
 # DETAIL = "detail"
 MSG = "msg"
@@ -60,14 +60,14 @@ class LOSException(HTTPException):
         self.detail = list(flatten_errors(raw_errors, config))
 
     @classmethod
-    def single_error(cls, error: PydanticErrorMixin, loc: List[Union[str, int]] = (), model=CustomBaseModel, status_code=status.HTTP_400_BAD_REQUEST, headers: Dict[str, Any] = None) -> 'LOSException':
+    def single_error(cls, error: PydanticErrorMixin, loc: List[Union[str, int]] = (), model=Schema, status_code=status.HTTP_400_BAD_REQUEST, headers: Dict[str, Any] = None) -> 'LOSException':
         los_exception = cls(status_code=status_code, headers=headers)
         los_exception.set_error(loc, error, model)
         return los_exception
 
     @classmethod
     def with_error(
-            cls, code, msg_template=None, loc: List[Union[str, int]] = (), model=CustomBaseModel, status_code=status.HTTP_400_BAD_REQUEST, headers: Dict[str, Any] = None, **kwargs
+            cls, code, msg_template=None, loc: List[Union[str, int]] = (), model=Schema, status_code=status.HTTP_400_BAD_REQUEST, headers: Dict[str, Any] = None, **kwargs
     ) -> 'LOSException':
         los_exception = cls(status_code=status_code, headers=headers)
         if not msg_template:

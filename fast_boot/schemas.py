@@ -2,7 +2,6 @@ import abc
 from datetime import date
 from enum import Enum
 from typing import Any, Generic, List, TypeVar, Union
-from uuid import UUID
 
 import orjson
 from pydantic import BaseModel, Field, validator
@@ -13,10 +12,6 @@ from pydantic.schema import datetime, timedelta
 from starlette.authentication import BaseUser
 from starlette.responses import Response
 
-from fast_boot.security.access.hierarchical_roles import (
-    RoleHierarchy
-)
-
 
 def orjson_dumps(v, *, default):
     return orjson.dumps(v, default=default).decode()
@@ -25,7 +20,7 @@ def orjson_dumps(v, *, default):
 TypeX = TypeVar("TypeX")
 
 
-class CustomBaseModel(BaseModel):
+class Schema(BaseModel):
     class Config:
         json_loads = orjson.loads
         json_dumps = orjson_dumps
@@ -36,13 +31,8 @@ class CustomBaseModel(BaseModel):
         }
         orm_mode = True
 
-    def set_uuid(self, uuid: [str, UUID]):
-        object.__setattr__(self, 'uuid', uuid)
-
     @validator('*', pre=True)
     def datetime_or_date_to_timestamp(cls, v, **kwargs):
-        if v == "":
-            raise ValueError('value is not null')
         val: ModelField = kwargs['field']
         if val.type_ is datetime or val.type_ is date:
             if v is not None:
@@ -74,7 +64,7 @@ class CustomBaseModel(BaseModel):
         return v
 
 
-class CustomGenericModel(CustomBaseModel, GenericModel):
+class CustomGenericModel(Schema, GenericModel):
     ...
 
 
@@ -82,15 +72,6 @@ class Warn(BaseModel):
     loc: List[Union[str, int]] = []
     code: str = None
     msg: str = None
-
-    class Config:
-        schema_extra = {
-            'example': {
-                'loc': ['body', 'username'],
-                'code': 'USERNAME_IS_EXITS',
-                'msg': 'username is exits'
-            }
-        }
 
 
 class PageResponse(CustomGenericModel, Generic[TypeX]):
@@ -136,7 +117,20 @@ class Pageable(BaseModel):
         return cls(limit, page)
 
 
-class AbstractUser(CustomBaseModel, BaseUser):
+class Permission(Schema):
+    code: str
+
+
+class Role(Schema):
+    code: str
+    permissions: List[Permission]
+
+
+class RoleHierarchy(Schema):
+    roles: List[Role]
+
+
+class AbstractUser(Schema, BaseUser):
     @abc.abstractmethod
     def get_branch_code(self) -> str:
         ...
