@@ -18,8 +18,6 @@ class WebSecurityConfigurerAdapter:
 
     def get_http(self) -> HttpSecurity:
         if not self.http:
-            self.context.set_bean(self.authenticator())
-            self.context.set_bean(self.user_detail_service())
             self.http = HttpSecurity(self.context)
             self.apply_default_configuration(self.http)
             self.configure(self.http)

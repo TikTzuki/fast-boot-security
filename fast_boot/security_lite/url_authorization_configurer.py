@@ -64,16 +64,14 @@ class ExpressionUrlAuthorizationConfigurer(Generic[Obj, B]):
     def configure(self, http: B):
         metadata_source = self.create_metadata_source(http)
         if metadata_source:
-            security_interceptor = self.create_filter_security_interceptor(http, metadata_source, self.context.get_bean(Authenticator))
+            security_interceptor = self.create_filter_security_interceptor(http, metadata_source)
             http.add_filter(security_interceptor)
 
-    def create_filter_security_interceptor(self, http: B, metadata_source, authenticator: Authenticator) -> FilterSecurityInterceptor:
+    def create_filter_security_interceptor(self, http: B, metadata_source) -> FilterSecurityInterceptor:
         interceptor = FilterSecurityInterceptor()
         interceptor.security_metadata_source = metadata_source
-        if self.context.debug:
-            logging.debug(metadata_source)
-        interceptor.authentication_manager = authenticator
-        interceptor.access_decision_manager = self.context.get_bean(AccessDecisionManager)
+        interceptor.authentication_manager = None
+        interceptor.access_decision_manager = AccessDecisionManager()
         return interceptor
 
     def create_metadata_source(self, http: B) -> Dict[RequestMatcher, List[str]]:

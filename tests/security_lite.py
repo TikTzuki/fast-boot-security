@@ -112,12 +112,7 @@ class AuthenticationManager(Authenticator):
         return unauthenticated
 
 
-# app.update_bean({
-#     WebSecurityConfigurerAdapter: WebConfig(app),
-#     Authenticator: AuthenticationManager()
-# })
-
-app.add_middleware(HttpSecurityMiddleware, context=app)
+app.add_middleware(HttpSecurityMiddleware, configurer=WebConfig(app), authenticator=AuthenticationManager())
 
 
 @app.get(

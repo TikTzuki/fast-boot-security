@@ -11,8 +11,8 @@ from starlette.responses import PlainTextResponse, Response, StreamingResponse
 from starlette.types import ASGIApp, Receive, Scope, Send, Message
 
 from fast_boot import error_code
-from fast_boot.context.application import ApplicationContext
 from fast_boot.exception import LOSException
+from fast_boot.security_lite.authenticator import Authenticator
 from fast_boot.security_lite.web_security_configurer_adapter import WebSecurityConfigurerAdapter
 
 
@@ -21,14 +21,15 @@ class HttpSecurityMiddleware:
     def __init__(
             self,
             app: ASGIApp,
-            context: ApplicationContext,
+            configurer: WebSecurityConfigurerAdapter,
+            authenticator: Authenticator,
             dispatch: DispatchFunction = None,
             on_error: Callable[[HTTPConnection, AuthenticationError], Response] = None
     ) -> None:
         self.app = app
         self.on_error = (on_error if on_error is not None else self.default_on_error)  # type: Callable[[HTTPConnection, Exception], Response]
         self.dispatch_func = self.dispatch if dispatch is None else dispatch
-        self.filter_chain = context.get_bean(WebSecurityConfigurerAdapter).build()
+        self.filter_chain = configurer.build()
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http":
