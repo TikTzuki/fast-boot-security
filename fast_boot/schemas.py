@@ -123,11 +123,11 @@ class Permission(Schema):
 
 class Role(Schema):
     code: str
-    permissions: List[Permission]
+    permissions: List[Permission] = []
 
 
 class RoleHierarchy(Schema):
-    roles: List[Role]
+    roles: List[Role] = []
 
 
 class AbstractUser(Schema, BaseUser):
